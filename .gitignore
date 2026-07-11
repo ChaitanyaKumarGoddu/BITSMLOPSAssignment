@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# MLflow local tracking store
+mlruns/
+mlartifacts/
+mlflow.db
+
+# Data — the raw download is reproducible via src/data/download.py, so ignore it.
+# The CLEANED dataset (data/processed/) IS committed as an assignment deliverable.
+data/raw/
+
+# The trained model + metadata ARE committed so the Docker image and graders
+# can run inference without retraining. (Remove models/ from git if you prefer
+# to regenerate it — training is fully reproducible with random_state=42.)
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

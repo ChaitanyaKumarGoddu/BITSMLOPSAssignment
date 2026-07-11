@@ -1,0 +1,25 @@
+# Development & CI dependencies (superset of runtime requirements)
+-r requirements.txt
+
+# Experiment tracking (training-time only — NOT needed to serve the model,
+# so it is intentionally excluded from the runtime image's requirements.txt)
+mlflow==3.14.0
+
+# EDA / visualisation
+matplotlib==3.11.0
+seaborn==0.13.2
+
+# Dataset download helper
+ucimlrepo==0.0.7
+
+# Notebooks
+jupyter==1.1.1
+notebook==7.4.5
+
+# Testing & quality
+pytest==9.1.1
+pytest-cov==7.1.0
+httpx==0.28.1
+flake8==7.3.0
+black==26.5.1
+isort==8.0.1

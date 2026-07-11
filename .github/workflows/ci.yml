@@ -1,0 +1,133 @@
+name: CI/CD Pipeline
+
+# Task 5 — Lint -> Test -> Train -> Docker build, with artifacts per run.
+# The pipeline FAILS the run if linting or tests fail (see each step).
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint with flake8 (fails on error)
+        run: |
+          # Hard-fail on real errors (syntax, undefined names).
+          flake8 src tests --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Full style pass (config in .flake8); non-blocking style warnings.
+          flake8 src tests --count --statistics
+
+      - name: Check formatting (black + isort)
+        run: |
+          black --check src tests
+          isort --check-only src tests
+
+      - name: Run unit tests with coverage (fails on test failure)
+        run: pytest --cov=src --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage & test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage
+          path: coverage.xml
+          retention-days: 14
+
+  train-model:
+    name: Train Model
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Download dataset
+        run: python -m src.data.download
+
+      - name: Preprocess data
+        run: python -m src.data.preprocess
+
+      - name: Train models (MLflow tracked)
+        run: python -m src.models.train
+
+      - name: Upload trained model + metadata + plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: |
+            models/model.pkl
+            models/model_metadata.json
+            reports/figures/*.png
+          retention-days: 30
+
+  docker-build:
+    name: Docker Build Validation
+    needs: train-model
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps & regenerate model for the image
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          python -m src.data.download
+          python -m src.data.preprocess
+          python -m src.models.train
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (validates the Dockerfile builds cleanly)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: heart-disease-api:ci
+          load: true
+
+      - name: Smoke-test the container's /health endpoint
+        run: |
+          docker run -d --name heart-api -p 8000:8000 heart-disease-api:ci
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:8000/health; then echo "healthy"; break; fi
+            sleep 3
+          done
+          curl -sf http://localhost:8000/health | grep -q '"model_loaded":true'
+          docker rm -f heart-api
