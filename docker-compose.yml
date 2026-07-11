@@ -6,7 +6,10 @@ services:
     image: heart-disease-api:latest
     container_name: heart-api
     ports:
-      - "8000:8000"
+      # Host 8001 -> container 8000, so this runs alongside the Kubernetes
+      # deployment (which uses host 8000). Prometheus scrapes the container on
+      # the Docker network at api:8000, unaffected by this host mapping.
+      - "8001:8000"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"]
       interval: 30s

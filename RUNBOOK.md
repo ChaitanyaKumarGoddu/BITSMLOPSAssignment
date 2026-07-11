@@ -180,16 +180,19 @@ Tear down when finished: `kubectl delete -f k8s/`
 
 ## 8. Monitoring — Prometheus + Grafana (🔵)  📷
 
-> Stop any container/K8s deployment using port 8000 first (this compose stack also binds 8000).
+> The compose stack maps the API to **host port 8001** (container stays 8000), so it
+> runs happily **alongside** the Kubernetes deployment on 8000 — no need to tear
+> anything down. Prometheus (9090) and Grafana (3000) don't conflict either.
 
 ```powershell
 docker compose up --build
 ```
 
-Wait ~30s, then generate some traffic (second terminal) so the graphs aren't empty:
+Wait ~30s, then generate some traffic (second terminal) so the graphs aren't empty
+— note the port is **8001** here:
 
 ```powershell
-1..20 | ForEach-Object { curl.exe -s -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d "@sample_request.json" | Out-Null }
+1..20 | ForEach-Object { curl.exe -s -X POST http://localhost:8001/predict -H "Content-Type: application/json" -d "@sample_request.json" | Out-Null }
 ```
 
 - **Prometheus** → <http://localhost:9090> → *Status → Targets*.
