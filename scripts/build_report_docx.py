@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "reports" / "figures"
 SHOTS = ROOT / "reports" / "screenshots" / "extracted"
 META = ROOT / "models" / "model_metadata.json"
-OUT = ROOT / "reports" / "Heart_Disease_MLOps_Report.docx"
+OUT = ROOT / "reports" / "Heart_Disease_MLOps_Report_FINAL.docx"
 
 ACCENT = RGBColor(0x1F, 0x4E, 0x79)
 GREY = RGBColor(0x66, 0x66, 0x66)
@@ -382,9 +382,19 @@ code(
     "black --check src tests && isort --check-only src tests"
 )
 shot(14, "Local Pytest run - all 17 tests pass, with the coverage summary.")
-placeholder("GitHub Actions: a green 'CI/CD Pipeline' run showing the 3 jobs "
-            "(Lint & Test -> Train Model -> Docker Build Validation). "
-            "Capture from your repo's Actions tab after pushing.")
+
+h2("GitHub Actions CI/CD pipeline")
+para(
+    "The GitHub Actions CI/CD pipeline runs automatically on every push to "
+    "main and has passed consistently (6 of 6 runs green). Each run executes "
+    "the three dependent jobs in sequence and fails fast on any lint or test "
+    "error, so broken code never reaches the container-build stage."
+)
+shot(33, "GitHub Actions - the CI/CD Pipeline triggers on every push; all runs completed successfully (green).")
+shot(34, "CI/CD run summary - the three jobs run in sequence: Lint & Unit Tests -> Train Model -> Docker Build Validation (Success, 3 artifacts).")
+shot(36, "Train Model job log - GridSearchCV comparison table; 'Winner: logistic_regression'; model + metadata saved.")
+shot(37, "Docker Build Validation job - the container /health smoke-test returns {\"status\":\"ok\",\"model_loaded\":true,\"model_name\":\"logistic_regression\"}.")
+shot(35, "CI/CD run artifacts - trained-model, test-coverage, and the Docker build record uploaded for each run.")
 
 page_break()
 
@@ -493,6 +503,7 @@ fig("architecture.png", "Figure 7. End-to-end system architecture.", 6.5)
 # ---- 12. Repository & deliverables ----
 h1("12. Repository & Deliverables")
 para(f"GitHub repository: {REPO_URL}")
+shot(32, "GitHub repository - project structure on the main branch.")
 rows2 = [
     ("Deliverable", "Location in repo"),
     ("Code + Dockerfile + requirements", "repo root, src/"),
