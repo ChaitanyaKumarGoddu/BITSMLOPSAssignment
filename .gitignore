@@ -4,7 +4,12 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
+
+# MS Word lock/temp files (created when the report .docx is open)
+~$*.docx
+~WRL*.tmp
 .ipynb_checkpoints/
 
 # Virtual environments
