@@ -25,6 +25,10 @@ data/raw/
 # can run inference without retraining. (Remove models/ from git if you prefer
 # to regenerate it — training is fully reproducible with random_state=42.)
 
+# Generated report draft (regenerate with scripts/build_report_docx.py).
+# Commit YOUR final report (with screenshots) under a different name instead.
+reports/Heart_Disease_MLOps_Report_DRAFT.docx
+
 # OS / editor
 .DS_Store
 Thumbs.db
