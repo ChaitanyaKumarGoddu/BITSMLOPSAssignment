@@ -8,6 +8,11 @@ requires-python = ">=3.11"
 testpaths = ["tests"]
 addopts = "-v --cov=src --cov-report=term-missing --cov-report=xml"
 pythonpath = ["."]
+filterwarnings = [
+    # Silence a third-party deprecation from Starlette's TestClient (it prefers
+    # httpx2 in a future release). Not our code; nothing actionable on our side.
+    "ignore:Using .httpx. with .starlette.testclient. is deprecated",
+]
 
 [tool.black]
 line-length = 88
