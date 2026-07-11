@@ -44,7 +44,7 @@ format:
 	$(PY) -m isort src tests
 
 mlflow-ui:
-	$(PY) -m mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+	$(PY) scripts/mlflow_ui.py --port 5000
 
 serve:
 	$(PY) -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload

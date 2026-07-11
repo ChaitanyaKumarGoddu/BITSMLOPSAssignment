@@ -101,8 +101,10 @@ python -m src.models.train       # -> models/model.pkl + metadata + MLflow runs
 Then browse the experiments:
 
 ```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+python scripts/mlflow_ui.py --port 5000   # launcher with a Python 3.14 compat shim
 # open http://localhost:5000
+# (On Python <=3.13 the plain command also works:
+#  mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000)
 ```
 
 (Or just run `make data eda train`.)

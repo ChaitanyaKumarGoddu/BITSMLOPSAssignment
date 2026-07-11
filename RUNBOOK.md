@@ -75,8 +75,14 @@ Expected final line from training:
 
 ## 3. Experiment tracking — MLflow UI  📷
 
+> **Use this launcher, not the raw `mlflow ui` command.** MLflow 3.14's web UI has a
+> bug on Python 3.14 (it imports `importlib.abc.Traversable`, which 3.14 removed),
+> so the plain command crashes with `ImportError: cannot import name 'Traversable'`.
+> `scripts/mlflow_ui.py` applies a compatibility shim and then starts the UI normally.
+> (This only affects the *viewer* — your logged runs, model, and API are unaffected.)
+
 ```powershell
-mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+python scripts/mlflow_ui.py --port 5000
 ```
 
 Open <http://localhost:5000> → click the **`heart-disease-classification`** experiment.
@@ -298,7 +304,7 @@ git push
 |------|---------|
 | Activate venv | `.venv\Scripts\Activate.ps1` |
 | Full pipeline | `python -m src.data.download; python -m src.data.preprocess; python -m src.data.eda; python -m src.models.train` |
-| MLflow UI | `mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000` |
+| MLflow UI | `python scripts/mlflow_ui.py --port 5000` |
 | Tests | `pytest` |
 | Lint / format | `flake8 src tests` · `black src tests` · `isort src tests` |
 | Serve API | `uvicorn src.api.main:app --reload --port 8000` |
@@ -321,3 +327,4 @@ git push
 | Grafana panels empty | Generate traffic (step 8 loop); wait ~15s for scrape |
 | `/predict` returns 503 | `models/model.pkl` missing — run `python -m src.models.train` |
 | MLflow "file store maintenance mode" | Always pass `--backend-store-uri sqlite:///mlflow.db` |
+| MLflow UI `ImportError: ... 'Traversable'` | Use `python scripts/mlflow_ui.py` (not raw `mlflow ui`) — see §3 |

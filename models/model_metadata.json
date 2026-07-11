@@ -1,6 +1,6 @@
 {
   "model_name": "logistic_regression",
-  "trained_at_utc": "2026-07-11T10:33:44.985470+00:00",
+  "trained_at_utc": "2026-07-11T12:30:58.079590+00:00",
   "best_params": {
     "clf__C": 0.1,
     "clf__solver": "liblinear"

@@ -145,8 +145,13 @@ Training logs everything to MLflow using a **SQLite backend** (`sqlite:///mlflow
 Browse the UI:
 
 ```bash
-mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000   # http://localhost:5000
+python scripts/mlflow_ui.py --port 5000   # http://localhost:5000
 ```
+
+> The launcher applies a small compatibility shim so the MLflow UI runs on
+> Python 3.14 (MLflow 3.14's server imports `importlib.abc.Traversable`, which
+> 3.14 removed). On Python ≤3.13, `mlflow ui --backend-store-uri sqlite:///mlflow.db`
+> works directly.
 
 📷 *Insert MLflow screenshots: the runs table (compare the 3 models) and one run's metrics/artifacts.*
 
