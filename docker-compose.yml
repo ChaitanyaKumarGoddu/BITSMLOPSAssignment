@@ -20,7 +20,10 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - "9090:9090"
+      # Host 9091 -> container 9090 (some machines already use host 9090).
+      # Grafana reaches Prometheus internally at http://prometheus:9090,
+      # unaffected by this host mapping.
+      - "9091:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:

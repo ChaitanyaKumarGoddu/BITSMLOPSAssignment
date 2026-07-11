@@ -160,8 +160,8 @@ docker compose up --build
 
 | Service    | URL                     | Notes                              |
 |------------|-------------------------|------------------------------------|
-| API        | http://localhost:8000   | FastAPI + `/metrics`               |
-| Prometheus | http://localhost:9090   | scrapes the API every 10s          |
+| API        | http://localhost:8001   | FastAPI + `/metrics` (8001 to coexist with K8s on 8000) |
+| Prometheus | http://localhost:9091   | scrapes the API every 10s          |
 | Grafana    | http://localhost:3000   | admin/admin; dashboard auto-loaded |
 
 The API logs every request (method, path, latency, status) and exposes a custom `heart_predictions_total{outcome=...}` counter plus standard HTTP latency/throughput metrics.

@@ -182,7 +182,7 @@ Tear down when finished: `kubectl delete -f k8s/`
 
 > The compose stack maps the API to **host port 8001** (container stays 8000), so it
 > runs happily **alongside** the Kubernetes deployment on 8000 — no need to tear
-> anything down. Prometheus (9090) and Grafana (3000) don't conflict either.
+> anything down. Prometheus (host 9091) and Grafana (3000) don't conflict either.
 
 ```powershell
 docker compose up --build
@@ -195,7 +195,7 @@ Wait ~30s, then generate some traffic (second terminal) so the graphs aren't emp
 1..20 | ForEach-Object { curl.exe -s -X POST http://localhost:8001/predict -H "Content-Type: application/json" -d "@sample_request.json" | Out-Null }
 ```
 
-- **Prometheus** → <http://localhost:9090> → *Status → Targets*.
+- **Prometheus** → <http://localhost:9091> → *Status → Targets*.
   📷 **Screenshot 9** — the `heart-disease-api` target showing **UP**.
 - **Grafana** → <http://localhost:3000> (login `admin` / `admin`, skip password change) → *Dashboards* → **"Heart Disease API — Monitoring"**.
   📷 **Screenshot 10** — the dashboard with live request-rate / latency / prediction-outcome panels.
