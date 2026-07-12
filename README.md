@@ -62,7 +62,7 @@ heart-disease-mlops/
 ├── k8s/                          # Task 7: deployment.yaml + service.yaml
 ├── helm/heart-disease-api/       # Task 7: Helm chart (optional path)
 ├── monitoring/                   # Task 8: prometheus.yml + Grafana provisioning
-├── reports/                      # Task 9: report + figures + screenshots
+├── reports/                      # Task 9: final report (docx/pdf) + figures
 ├── requirements.txt              # runtime deps (pinned, wheels for py3.11–3.14)
 ├── requirements-dev.txt          # + EDA / tests / lint / notebook
 └── Makefile                      # convenience targets
@@ -215,6 +215,6 @@ black --check src tests && isort --check-only src tests
 | 6 | Containerisation | `Dockerfile`, `/predict` endpoint |
 | 7 | Deployment | `k8s/`, `helm/` |
 | 8 | Monitoring | `src/api/main.py`, `docker-compose.yml`, `monitoring/` |
-| 9 | Report | `reports/REPORT.md` |
+| 9 | Report | `reports/Heart_Disease_MLOps_Report_FINAL.pdf` (+ `.docx`) |
 
-See [`reports/REPORT.md`](reports/REPORT.md) for the full written report.
+See [`reports/Heart_Disease_MLOps_Report_FINAL.pdf`](reports/Heart_Disease_MLOps_Report_FINAL.pdf) for the full written report (also available as `.docx`).
